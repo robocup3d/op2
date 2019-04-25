@@ -244,10 +244,10 @@ OptimizationBehaviorWalkForward( const std::string teamName,
                    uNum,
                    namedParams_,
                    rsg_ ),
-    outputFile( outputFile_ ) {
+    outputFile( outputFile_ ), TOTAL_WALK_TIME(20.) {
 
 
-    INIT_WAIT = 3;
+    INIT_WAIT = 10-worldModel->getUNum();
     run = 0;
     totalWalkDist = 0;
 
@@ -263,13 +263,14 @@ void OptimizationBehaviorWalkForward::init() {
     initBeamed = false;
     beamChecked = false;
     string msg = "(playMode BeforeKickOff)";
+//    if (worldModel->getUNum() == 7)
     setMonMessage(msg);
 }
 
 void OptimizationBehaviorWalkForward::
 beam( double& beamX, double& beamY, double& beamAngle ) {
     beamX = -HALF_FIELD_X+3;
-    beamY = 0;
+    beamY = worldModel->getUNum()-5;
     beamAngle = 0;
 }
 
@@ -282,7 +283,7 @@ bool OptimizationBehaviorWalkForward::checkBeam() {
     VecPosition meDesired = VecPosition(beamX, beamY, 0);
     double distance = meTruth.getDistanceTo(meDesired);
     double angleOffset = abs(worldModel->getMyAngDegGroundTruth()-beamAngle);
-    if(distance > 0.05 || angleOffset > 5) {
+    if(distance > 0.1 || angleOffset > 5) {
         LOG_STR("Problem with the beam!");
         LOG(distance);
         LOG(meTruth);
@@ -295,23 +296,25 @@ bool OptimizationBehaviorWalkForward::checkBeam() {
 SkillType OptimizationBehaviorWalkForward::
 selectSkill() {
     double currentTime = worldModel->getTime();
-    if (currentTime-startTime < INIT_WAIT || startTime < 0) {
+    if (currentTime-startTime < INIT_WAIT || currentTime-startTime > INIT_WAIT + TOTAL_WALK_TIME || startTime < 0) {
         return SKILL_STAND;
     }
-
-    return goToTarget(VecPosition(HALF_FIELD_X, 0, 0));
+    if (currentTime-startTime > INIT_WAIT + TOTAL_WALK_TIME)
+        cerr<<"walk time is over!\n";
+    static double y_offset = me.getY();
+    return goToTarget(VecPosition(HALF_FIELD_X, y_offset, 0));
 }
 
 void OptimizationBehaviorWalkForward::
 updateFitness() {
     static bool written = false;
 
-    if (run == 10) {
+    if (run == 2) {
         if (!written) {
             double fitness = totalWalkDist/(double)run;
             fstream file;
-            file.open(outputFile.c_str(), ios::out );
-            file << fitness << endl;
+            file.open(outputFile.c_str(), ios::app );
+            file << fitness << '\n';
             file.close();
             written = true;
         }
@@ -338,6 +341,7 @@ updateFitness() {
                 // move on
                 totalWalkDist -= 100;
                 run++;
+                LOG_STR("failed to beamcheck");
             }
             failedLastBeamCheck = true;
             init();
@@ -345,19 +349,30 @@ updateFitness() {
         } else {
             failedLastBeamCheck = false;
             // Set playmode to PlayOn to start run and move ball out of the way
+//            string msg = "(ball (pos 0 -9 0) (vel 0 0 0))";
             string msg = "(playMode PlayOn) (ball (pos 0 -9 0) (vel 0 0 0))";
+//            if (worldModel->getUNum() == 7)
             setMonMessage(msg);
         }
     }
 
-    if (currentTime-startTime >= 10.0+INIT_WAIT) {
+    VecPosition accel = bodyModel->getAccelRates();
+    static fstream pose("pose", ios::app);
+    pose << accel.getX()<<","<<accel.getY()<<","<<accel.getZ()<<endl;
+    double lastTime = TOTAL_WALK_TIME+INIT_WAIT;
+    lastTime += worldModel->getUNum() == 7 ? .5 : 0;
+    if (currentTime-startTime >= lastTime+1) {
+        pose << "----------------\n";
+        pose.close();
         VecPosition me = worldModel->getMyPositionGroundTruth();
         double beamX, beamY, beamAngle;
         beam(beamX, beamY, beamAngle);
         VecPosition start = VecPosition(beamX, beamY, 0);
 
-        double walkdist = (me-start).getX();
-        cout << "Run " << run << " distance walked: " << walkdist << endl;
+        static double walkdist;
+        VecPosition v = me-start;
+        walkdist = v.getX() - abs(v.getY());
+        cout <<"No."<<worldModel->getUNum()<< " Run " << run << " distance walked: " << walkdist << endl;
         totalWalkDist += walkdist;
         run++;
         init();

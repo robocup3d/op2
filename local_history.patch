@@ -1,0 +1,44 @@
+Index: optimization/optimizationbehaviors.cc
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- optimization/optimizationbehaviors.cc	(date 1556160422000)
++++ optimization/optimizationbehaviors.cc	(date 1556160422000)
+@@ -247,7 +247,7 @@
+     outputFile( outputFile_ ), TOTAL_WALK_TIME(20.) {
+ 
+ 
+-    INIT_WAIT = 10-worldModel->getUNum();
++    INIT_WAIT = 3; // 10-worldModel->getUNum();
+     run = 0;
+     totalWalkDist = 0;
+ 
+@@ -299,8 +299,8 @@
+     if (currentTime-startTime < INIT_WAIT || currentTime-startTime > INIT_WAIT + TOTAL_WALK_TIME || startTime < 0) {
+         return SKILL_STAND;
+     }
+-    if (currentTime-startTime > INIT_WAIT + TOTAL_WALK_TIME)
+-        cerr<<"walk time is over!\n";
++//    if (currentTime-startTime > INIT_WAIT + TOTAL_WALK_TIME)
++//        cerr<<worldModel->getUNum()<<" : walk time is over!\n";
+     static double y_offset = me.getY();
+     return goToTarget(VecPosition(HALF_FIELD_X, y_offset, 0));
+ }
+@@ -328,7 +328,7 @@
+ 
+     double currentTime = worldModel->getTime();
+     if (currentTime-startTime < INIT_WAIT) {
+-        return;
++        return init();
+     }
+ 
+     if (!beamChecked) {
+@@ -369,6 +369,7 @@
+         cout <<"No."<<worldModel->getUNum()<< " Run " << run << " distance walked: " << walkdist << endl;
+         totalWalkDist += walkdist;
+         run++;
++        cerr<<worldModel->getUNum()<<" : reinit!\n";
+         init();
+     }
+ }

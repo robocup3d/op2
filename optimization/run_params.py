@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 #coding=utf-8
 import os
-from optim_libs import *
 
 
 ROBOT_TYPE = 2
@@ -24,24 +23,31 @@ def writeToFile(paramList, filePath):
 
 def run(paramList, roboType, absPath):
     writeToFile(paramList, '../paramfiles/optimizing.txt')
-    command = './sample_start-optimization.sh {0} {1} out'.format(ROBOT_TYPE, absPath)
+    command = './sample_start-optimization.sh {0} {1} walkout'.format(ROBOT_TYPE, absPath)
     os.system(command)
 
-    file = open('./out')
+    file = open('walkout')
     lines = file.readlines()
     file.close()
-    distance, time, fit = lines[-1][:-1].split(',')
+    distances = lines[-7:]
     
-    return float(distance)
+    return sum([float(_[:-1]) for _ in distances])/len(distances)
+
+
+def readParams(fn='../paramfiles/optimizing.txt'):
+    with open(fn) as f:
+        lines = f.readlines()
+        params = [float(_) for _ in [i[:-1].split('\t')[-1] for i in lines]]
+    return params
 
 
 def main():
-    paramList = find_max()
+    paramList = readParams()
     print(paramList)
     absPath = os.path.abspath('..')+'/paramfiles/optimizing.txt'
     #writeToFile(paramList, absPath)
     rst = run(paramList, ROBOT_TYPE, absPath)
-    print('kicking average distance :', rst)
+    print('running average distance :', rst)
 
 
 if __name__ == '__main__':

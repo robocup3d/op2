@@ -6,3 +6,6 @@ CMakeFiles
 Makefile
 agentspark
 libs/*.so*
+cmake-build-debug
+
+.idea
