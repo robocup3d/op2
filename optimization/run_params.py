@@ -73,7 +73,7 @@ def dump2json(fn, params, param_names, score):
 def main():
     paramList, params_name = readParams()
     #print(paramList)
-    absPath = os.path.abspath('..')+'/paramfiles/optimizing.txt'
+    absPath = os.path.abspath('..')+'/paramfiles/original.txt'
     #writeToFile(paramList, absPath)
     rst = run(paramList, ROBOT_TYPE, absPath)
     print('go to target average time cost:', rst)

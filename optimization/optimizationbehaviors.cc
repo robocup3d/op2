@@ -392,17 +392,23 @@ updateFitness() {
     }
     if ( currentTime-startTime > INIT_WAIT + MAX_WAIT)
     {
+        cout <<"\t>>>  No."<<worldModel->getUNum()<< " Time out, " << run << " time cost: 1000" << endl;
         run++;
         totalWalkTime += 1000;
         started = false;
         init();
+
+        return;
     }
     if(!fallen && worldModel->isFallen())
     {
         fallen = true;
+        cout <<"\t>>>  No."<<worldModel->getUNum()<< " Fallen, " << run << " time cost: 1000" << endl;
+        totalWalkTime += 1000;
         run++;
         started = false;
         init();
+        return;
     }
 
 //    VecPosition accel = bodyModel->getAccelRates();
@@ -423,7 +429,7 @@ updateFitness() {
 
         static double walkTime;
         walkTime = currentTime-startTime+INIT_WAIT;
-        cout <<"No."<<worldModel->getUNum()<< " Run " << run << " time walked: " << walkTime << endl;
+        cout <<"\t>>>  No."<<worldModel->getUNum()<< " Run " << run << " time cost: " << walkTime << endl;
         if (fallen)
             totalWalkTime += 100;
         else
