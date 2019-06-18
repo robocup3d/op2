@@ -244,16 +244,34 @@ OptimizationBehaviorWalkForward( const std::string teamName,
                    uNum,
                    namedParams_,
                    rsg_ ),
-    outputFile( outputFile_ ), TOTAL_WALK_TIME(20.) {
-
-
+    outputFile( outputFile_ ),
+    TOTAL_WALK_TIME(20.),
+    MAX_WAIT(30)
+    {
     INIT_WAIT = 3;
     run = 0;
     totalWalkTime = 0;
     worldModel->setUNum(uNum);
     // Use ground truth localization for behavior
     worldModel->setUseGroundTruthDataForLocalization(true);
-    // TODO: MYSQL INIT
+//    mysql_init(&mysql);
+//    mysql_options(&mysql,MYSQL_SET_CHARSET_NAME,"gb2312");
+//    if (!mysql_real_connect(
+//            &mysql,
+//            "192.168.1.163",
+//            "root","robocup3d",
+//            "optimization",
+//            3306,
+//            NULL,
+//            0))
+//    {
+//        cout<<"Connected to SQL server !\n";
+//    }
+//    else
+//    {
+//        cerr<<"Failed to connect to SQL server!\n";
+//        exit(1);
+//    }
     init();
 }
 
@@ -266,13 +284,13 @@ void OptimizationBehaviorWalkForward::init() {
     string msg = "(playMode BeforeKickOff)";
 
 //    cout<<"No."<<worldModel->getUNum() <<" : wait time "<<INIT_WAIT<<endl;
-    if (worldModel->getUNum() == 7)
+//    if (worldModel->getUNum() == 7)
     setMonMessage(msg);
 }
 
 void OptimizationBehaviorWalkForward::beam( double& beamX, double& beamY, double& beamAngle ) {
-    beamX = -HALF_FIELD_X+4;
-    beamY = 1.5*worldModel->getUNum()-8;
+    beamX = -HALF_FIELD_X+5;
+    beamY = 0;
     target = VecPosition(0, beamY, 0);
     beamAngle = 0;
 }
@@ -286,7 +304,8 @@ bool OptimizationBehaviorWalkForward::checkBeam() {
     VecPosition meDesired = VecPosition(beamX, beamY, 0);
     double distance = meTruth.getDistanceTo(meDesired);
     double angleOffset = abs(worldModel->getMyAngDegGroundTruth()-beamAngle);
-    if(distance > 0.1 || angleOffset > 5) {
+    // enlarge error tolerance
+    if(distance > 1 || angleOffset > 25) {
         LOG_STR("Problem with the beam!");
         LOG(distance);
         LOG(meTruth);
@@ -312,9 +331,9 @@ void OptimizationBehaviorWalkForward::
 updateFitness() {
     static bool written = false;
     const int PLAY_MODE = worldModel->getPlayMode();
-    if (run == 2) {
+    if (run == 20) {
         if (!written) {
-            double fitness = totalWalkTime/(double)run;
+            double fitness = totalWalkTime/run;
             fstream file;
             file.open(outputFile.c_str(), ios::app );
             file << fitness << '\n';
@@ -322,6 +341,9 @@ updateFitness() {
             written = true;
 //            cout<<"No."<<worldModel->getUNum()<<" write data at "<<worldModel->getTime()<<endl;
         }
+
+        //// TODO: ADD CODES HERE TO CONTINUE RUNNING
+
         return;
     }
 
@@ -365,24 +387,36 @@ updateFitness() {
             // Set playmode to PlayOn to start run and move ball out of the way
 //            string msg = "(ball (pos 0 -9 0) (vel 0 0 0))";
             string msg = "(playMode PlayOn) (ball (pos 0 -9 0) (vel 0 0 0))";
-            if (worldModel->getUNum() == 7)
             setMonMessage(msg);
         }
     }
-    if (!fallen && worldModel->isFallen())
+    if ( currentTime-startTime > INIT_WAIT + MAX_WAIT)
+    {
+        run++;
+        started = false;
+        init();
+    }
+    if(!fallen && worldModel->isFallen())
+    {
         fallen = true;
+        run++;
+        started = false;
+        init();
+    }
+
 //    VecPosition accel = bodyModel->getAccelRates();
 //    static fstream pose("pose", ios::app);
 //    pose << accel.getX()<<","<<accel.getY()<<","<<accel.getZ()<<endl;
     double lastTime = TOTAL_WALK_TIME+INIT_WAIT;
     lastTime += (worldModel->getUNum() == 7 ? 1 : 0);
+    VecPosition me = worldModel->getMyPositionGroundTruth();
     if (currentTime-startTime >= lastTime || me.getDistanceTo(target) < .3) {
 //        pose << "----------------\n";
 //        pose.close();
-        VecPosition me = worldModel->getMyPositionGroundTruth();
+
         double beamX, beamY, beamAngle;
         beam(beamX, beamY, beamAngle);
-        VecPosition start = VecPosition(beamX, beamY, 0);
+//        VecPosition start = VecPosition(beamX, beamY, 0);
 
         static double walkTime;
         walkTime = currentTime-startTime-INIT_WAIT;

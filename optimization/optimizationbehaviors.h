@@ -2,7 +2,7 @@
 #define _OPTIMIZATION_BEHAVIORS_H
 
 #include "../behaviors/naobehavior.h"
-#include "mysql/mysql.h"
+//#include "mysql/mysql.h"
 
 bool isBallMoving(const WorldModel *worldModel);
 
@@ -17,7 +17,6 @@ class OptimizationBehaviorFixedKick: public NaoBehavior {
     bool fallen;
     int kick;
     double INIT_WAIT_TIME;
-    MYSQL msql;
 
     VecPosition ballInitPos;
     void initKick();
@@ -38,7 +37,7 @@ class OptimizationBehaviorWalkForward : public NaoBehavior {
     const string outputFile;
 
     int run;
-    double startTime, TOTAL_WALK_TIME;
+    double startTime, TOTAL_WALK_TIME, MAX_WAIT;
     bool beamChecked;
     double INIT_WAIT;
     double totalWalkTime;
@@ -47,6 +46,7 @@ class OptimizationBehaviorWalkForward : public NaoBehavior {
 
     void init();
     bool checkBeam();
+//    MYSQL mysql;
 
 public:
 

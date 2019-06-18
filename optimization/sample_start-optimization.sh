@@ -27,7 +27,7 @@ PID=$(echo $!)
 #To view task while it runs uncomment the following line
 #<roboviz_start_script> --serverPort=$SPARK_SERVERPORT &
 
-sleep 5
+sleep 4
 NUM_PLAYERS=7
 DIR_SCRIPT="$( cd "$( dirname "$0" )" && pwd )"
 TYPE=$1
@@ -51,51 +51,32 @@ fi
 if [ $task == "walk" ]
 then
     # WalkForward optimization task
-for ((i=1;i<=$NUM_PLAYERS;i++)); do
-#i=2
-    $DIR_SCRIPT/../agentspark --unum $i --type $TYPE --paramsfile $DIR_SCRIPT/../paramfiles/defaultParams.txt --paramsfile $DIR_SCRIPT/../paramfiles/defaultParams_t$TYPE.txt --paramsfile $PARAMS_FILE --experimentout $OUTPUT_FILE --optimize walkForwardAgent --port $SPARK_AGENTPORT --mport $SPARK_SERVERPORT &
-sleep .75
-done
-
-#perl stats/kickoff.pl
+    $DIR_SCRIPT/../agentspark --unum 2 --type $TYPE --paramsfile $DIR_SCRIPT/../paramfiles/defaultParams.txt --paramsfile $DIR_SCRIPT/../paramfiles/defaultParams_t$TYPE.txt --paramsfile $PARAMS_FILE --experimentout $OUTPUT_FILE --optimize walkForwardAgent --port $SPARK_AGENTPORT --mport $SPARK_SERVERPORT &
 fi
 
 AGENTPID=$!
-#sleep 3
+sleep 3
 
-maxWaitTimeSecs=10
+maxWaitTimeSecs=15
 total_wait_time=0
 
 originLine=$(cat $OUTPUT_FILE |wc -l)
-line=$(cat $OUTPUT_FILE |wc -l)
+line=$originLine
 
 # echo "lien line line line $line"
 # echo "cnt  cnt  cnt  cnt  $cnt "
-while [ $line -ne $(($originLine+7)) ] && [ $total_wait_time -lt $maxWaitTimeSecs ]
+
+while [ $line -ne $(($originLine+1)) ] && [ $total_wait_time -lt $maxWaitTimeSecs ]
 do
   line=$(cat $OUTPUT_FILE |wc -l)
   sleep 1
   total_wait_time=`expr $total_wait_time + 1`
 done
 
-echo >> $OUTPUT_FILE
-
-#if [ ! $total_wait_time -lt $maxWaitTimeSecs ]
-#then
-#echo >> $OUTPUT_FILE
-#fi
-#if [ ! -f $OUTPUT_FILE ]
-#then
-#  echo "Timed out while waiting for script to complete, current wait time is $total_wait_time seconds."
-#else
-#  echo "Completed with a wait time of $total_wait_time seconds."
-#fi
-
 echo "Killing Simulator"
-kill -s 2 $PID
+kill -9 $PID
 echo "Killing Agent"
-#kill -s 2 $AGENTPID
-killall -q agentspark > /dev/null 2>/dev/null
+kill -9 $AGENTPID >/dev/null 2>/dev/null
 
 sleep 2
 echo "Finished"

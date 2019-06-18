@@ -26,12 +26,12 @@ def run(paramList, roboType, absPath):
     command = './sample_start-optimization.sh {0} {1} walkout'.format(ROBOT_TYPE, absPath)
     os.system(command)
     with open('walkout') as file:
-        line = file.readlines()[-2]
+        lines = file.readlines()[-7:]
         try:
-            distances = [float(_) for _ in line.strip('\n').split(' ')]
-            return sum(distances)
+            time_cost = [float(_.strip('\n')) for _ in lines]
+            return sum(time_cost)
         except ValueError:
-            return 10000;
+            return 10000
 
 
 def readParams(fn='../paramfiles/original.txt'):
