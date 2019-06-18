@@ -245,8 +245,8 @@ OptimizationBehaviorWalkForward( const std::string teamName,
                    namedParams_,
                    rsg_ ),
     outputFile( outputFile_ ),
-    TOTAL_WALK_TIME(20.),
-    MAX_WAIT(30)
+//    TOTAL_WALK_TIME(20.),
+    MAX_WAIT(100)
     {
     INIT_WAIT = 3;
     run = 0;
@@ -331,7 +331,7 @@ void OptimizationBehaviorWalkForward::
 updateFitness() {
     static bool written = false;
     const int PLAY_MODE = worldModel->getPlayMode();
-    if (run == 20) {
+    if (run == 5) {
         if (!written) {
             double fitness = totalWalkTime/run;
             fstream file;
@@ -393,6 +393,7 @@ updateFitness() {
     if ( currentTime-startTime > INIT_WAIT + MAX_WAIT)
     {
         run++;
+        totalWalkTime += 1000;
         started = false;
         init();
     }
@@ -407,22 +408,24 @@ updateFitness() {
 //    VecPosition accel = bodyModel->getAccelRates();
 //    static fstream pose("pose", ios::app);
 //    pose << accel.getX()<<","<<accel.getY()<<","<<accel.getZ()<<endl;
-    double lastTime = TOTAL_WALK_TIME+INIT_WAIT;
-    lastTime += (worldModel->getUNum() == 7 ? 1 : 0);
+//    double lastTime = TOTAL_WALK_TIME+INIT_WAIT;
+//    lastTime += (worldModel->getUNum() == 7 ? 1 : 0);
     VecPosition me = worldModel->getMyPositionGroundTruth();
-    if (currentTime-startTime >= lastTime || me.getDistanceTo(target) < .3) {
+    double distance = me.getDistanceTo(target);
+    cout<<"\rdistance to target is "<<distance;
+    if (currentTime-startTime >= MAX_WAIT+INIT_WAIT || distance < 1) {
 //        pose << "----------------\n";
 //        pose.close();
 
-        double beamX, beamY, beamAngle;
-        beam(beamX, beamY, beamAngle);
+//        double beamX, beamY, beamAngle;
+//        beam(beamX, beamY, beamAngle);
 //        VecPosition start = VecPosition(beamX, beamY, 0);
 
         static double walkTime;
-        walkTime = currentTime-startTime-INIT_WAIT;
+        walkTime = currentTime-startTime+INIT_WAIT;
         cout <<"No."<<worldModel->getUNum()<< " Run " << run << " time walked: " << walkTime << endl;
         if (fallen)
-            totalWalkTime += 50;
+            totalWalkTime += 100;
         else
             totalWalkTime += walkTime;
         run++;

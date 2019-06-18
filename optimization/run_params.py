@@ -26,12 +26,12 @@ def run(paramList, roboType, absPath):
     command = './sample_start-optimization.sh {0} {1} walkout'.format(ROBOT_TYPE, absPath)
     os.system(command)
     with open('walkout') as file:
-        lines = file.readlines()[-7:]
+        lines = file.readlines()[-1]
         try:
-            time_cost = [float(_.strip('\n')) for _ in lines]
-            return sum(time_cost)
+            # time_cost = [float(_.strip('\n')) for _ in lines]
+            return float(lines.strip('\n'))
         except ValueError:
-            return 10000
+            return 1000
 
 
 def readParams(fn='../paramfiles/original.txt'):
@@ -76,7 +76,7 @@ def main():
     absPath = os.path.abspath('..')+'/paramfiles/optimizing.txt'
     #writeToFile(paramList, absPath)
     rst = run(paramList, ROBOT_TYPE, absPath)
-    print('running average distance :', rst)
+    print('go to target average time cost:', rst)
 
 
 if __name__ == '__main__':

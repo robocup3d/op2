@@ -29,7 +29,7 @@ else:
 def eva(ind):
     #global record
     paramList = [e*ind[i] for i, e in enumerate(std_list)]
-    distance = run(paramList, 2, '../paramfiles/optimizing.txt')
+    distance = run(paramList, ROBOT_TYPE, '../paramfiles/optimizing.txt')
     record['record'].append(
         {
             'parameters': paramList,
@@ -41,7 +41,7 @@ def eva(ind):
         print(*paramList, distance, sep=',', file=f)
     #dump2json(PARAMS_RECORD_FILE_NAME, paramList, params_name, distance)
     print('distance fitness: ', distance)
-    return 20 - distance
+    return distance**2
 
 
 def store_data():

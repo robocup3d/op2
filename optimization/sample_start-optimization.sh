@@ -27,7 +27,7 @@ PID=$(echo $!)
 #To view task while it runs uncomment the following line
 #<roboviz_start_script> --serverPort=$SPARK_SERVERPORT &
 
-sleep 4
+sleep 3
 NUM_PLAYERS=7
 DIR_SCRIPT="$( cd "$( dirname "$0" )" && pwd )"
 TYPE=$1
@@ -55,9 +55,9 @@ then
 fi
 
 AGENTPID=$!
-sleep 3
+sleep 2
 
-maxWaitTimeSecs=15
+maxWaitTimeSecs=60
 total_wait_time=0
 
 originLine=$(cat $OUTPUT_FILE |wc -l)
@@ -74,7 +74,7 @@ do
 done
 
 echo "Killing Simulator"
-kill -9 $PID
+kill -9 $PID >/dev/null 2>/dev/null
 echo "Killing Agent"
 kill -9 $AGENTPID >/dev/null 2>/dev/null
 
