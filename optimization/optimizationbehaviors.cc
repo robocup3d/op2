@@ -347,6 +347,8 @@ updateFitness() {
         return;
     }
 
+//    worldModel->getRVSender()->drawText("display test",300,300,RVSender::RED);
+//    worldModel->getRVSender()->drawAgentText("display test",2,SIDE_LEFT,RVSender::RED);
     if (startTime < 0 /*|| (PLAY_MODE != PM_PLAY_ON && worldModel->getUNum() != 7*/) {
         init();
         return;
@@ -404,7 +406,7 @@ updateFitness() {
     {
         fallen = true;
         cout <<"\t>>>  No."<<worldModel->getUNum()<< " Fallen, " << run << " time cost: 1000" << endl;
-        totalWalkTime += 1000;
+        totalWalkTime += 1000-(10+me.getX())*90;
         run++;
         started = false;
         init();
