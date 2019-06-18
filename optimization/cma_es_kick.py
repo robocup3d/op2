@@ -8,8 +8,11 @@ import pickle
 import sys
 import os
 import json
+import pymysql
 #from optim_libs import *
 
+db = pymysql.connect('192.168.1.163',user='root', password='robocup3d',db='optimization')
+cursor=db.cursor()
 
 WALK_RESULT_FILE_NAME='walkout'
 PARAMS_RECORD_FILE_NAME='params-record.json'
@@ -29,19 +32,26 @@ else:
 def eva(ind):
     #global record
     paramList = [e*ind[i] for i, e in enumerate(std_list)]
-    distance = run(paramList, ROBOT_TYPE, '../paramfiles/optimizing.txt')
-    record['record'].append(
-        {
-            'parameters': paramList,
-            'walk distance': distance
-        }
-    )
+    time_cost = run(paramList, ROBOT_TYPE, '../paramfiles/optimizing.txt')
+    # record['record'].append(
+    #     {
+    #         'parameters': paramList,
+    #         'walk time_cost': time_cost
+    #     }
+    # )
     #json.dump(record, open(PARAMS_RECORD_FILE_NAME, 'w'))
     with open(PARAMS_RECORD_FILE, 'a') as f:
-        print(*paramList, distance, sep=',', file=f)
-    #dump2json(PARAMS_RECORD_FILE_NAME, paramList, params_name, distance)
-    print('distance fitness: ', distance)
-    return distance**2
+        print(*paramList, time_cost, sep=',', file=f)
+    #dump2json(PARAMS_RECORD_FILE_NAME, paramList, params_name, time_cost)
+    print('walk time cost: ', time_cost)
+    cursor.execute(
+        "insert into walk_straight values (" +
+        str(paramList)[1:-1] + ',' +
+        str(time_cost) + ")"
+    )
+    db.commit()
+    print("data base updated!")
+    return time_cost**2
 
 
 def store_data():

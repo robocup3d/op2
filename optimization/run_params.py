@@ -28,6 +28,7 @@ def run(paramList, roboType, absPath):
     with open('walkout') as file:
         lines = file.readlines()[-1]
         try:
+
             # time_cost = [float(_.strip('\n')) for _ in lines]
             return float(lines.strip('\n'))
         except ValueError:
