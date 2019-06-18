@@ -21,8 +21,8 @@ echo -n "and I am on: "
 hostname
 echo "Agent port: $SPARK_AGENTPORT, Monitor port: $SPARK_SERVERPORT"
 
-rcssserver3d --agent-port $SPARK_AGENTPORT --server-port $SPARK_SERVERPORT & > /dev/null
-PID=$!
+rcssserver3d --agent-port $SPARK_AGENTPORT --server-port $SPARK_SERVERPORT --script-path rcssserver3d.rb > /dev/null 2> /dev/null &
+PID=$(echo $!)
 
 #To view task while it runs uncomment the following line
 #<roboviz_start_script> --serverPort=$SPARK_SERVERPORT &
@@ -51,19 +51,19 @@ fi
 if [ $task == "walk" ]
 then
     # WalkForward optimization task
-#for ((i=1;i<=$NUM_PLAYERS;i++)); do
-i=2
+for ((i=1;i<=$NUM_PLAYERS;i++)); do
+#i=2
     $DIR_SCRIPT/../agentspark --unum $i --type $TYPE --paramsfile $DIR_SCRIPT/../paramfiles/defaultParams.txt --paramsfile $DIR_SCRIPT/../paramfiles/defaultParams_t$TYPE.txt --paramsfile $PARAMS_FILE --experimentout $OUTPUT_FILE --optimize walkForwardAgent --port $SPARK_AGENTPORT --mport $SPARK_SERVERPORT &
-sleep 1
-#done
-sleep 1
+sleep .75
+done
+
 #perl stats/kickoff.pl
 fi
 
 AGENTPID=$!
 #sleep 3
 
-maxWaitTimeSecs=60
+maxWaitTimeSecs=10
 total_wait_time=0
 
 originLine=$(cat $OUTPUT_FILE |wc -l)
@@ -78,6 +78,12 @@ do
   total_wait_time=`expr $total_wait_time + 1`
 done
 
+echo >> $OUTPUT_FILE
+
+#if [ ! $total_wait_time -lt $maxWaitTimeSecs ]
+#then
+#echo >> $OUTPUT_FILE
+#fi
 #if [ ! -f $OUTPUT_FILE ]
 #then
 #  echo "Timed out while waiting for script to complete, current wait time is $total_wait_time seconds."
@@ -88,7 +94,8 @@ done
 echo "Killing Simulator"
 kill -s 2 $PID
 echo "Killing Agent"
-kill -s 2 $AGENTPID
+#kill -s 2 $AGENTPID
+killall -q agentspark > /dev/null 2>/dev/null
 
 sleep 2
 echo "Finished"

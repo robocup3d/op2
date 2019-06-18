@@ -28,6 +28,7 @@ set(CORE_PATH utwalk)
 include_directories(
 ${CORE_PATH}
 ${RCSSNET3D_INCLUDE_DIR}
+/usr/include/mysql
 )
 
 set(CORE_FILES

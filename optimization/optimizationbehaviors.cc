@@ -123,7 +123,7 @@ void OptimizationBehaviorFixedKick::updateFitness() {
     }
 
     if (time - (timeStart + INIT_WAIT_TIME) > 15 && !isBallMoving(this->worldModel)) {
-        double angleOffset = abs(VecPosition(0, 0, 0).getAngleBetweenPoints(VecPosition(20, 0, 0), ballTruth));
+//        double angleOffset = abs(VecPosition(0, 0, 0).getAngleBetweenPoints(VecPosition(20, 0, 0), ballTruth));
         double distance = ballTruth.getX();
         double fitness = distance;
 
@@ -247,13 +247,13 @@ OptimizationBehaviorWalkForward( const std::string teamName,
     outputFile( outputFile_ ), TOTAL_WALK_TIME(20.) {
 
 
-    INIT_WAIT = 10-worldModel->getUNum();
+    INIT_WAIT = 3;
     run = 0;
-    totalWalkDist = 0;
-
+    totalWalkTime = 0;
+    worldModel->setUNum(uNum);
     // Use ground truth localization for behavior
     worldModel->setUseGroundTruthDataForLocalization(true);
-
+    // TODO: MYSQL INIT
     init();
 }
 
@@ -262,20 +262,23 @@ void OptimizationBehaviorWalkForward::init() {
     initialized = false;
     initBeamed = false;
     beamChecked = false;
+    fallen = false;
     string msg = "(playMode BeforeKickOff)";
-//    if (worldModel->getUNum() == 7)
+
+//    cout<<"No."<<worldModel->getUNum() <<" : wait time "<<INIT_WAIT<<endl;
+    if (worldModel->getUNum() == 7)
     setMonMessage(msg);
 }
 
-void OptimizationBehaviorWalkForward::
-beam( double& beamX, double& beamY, double& beamAngle ) {
-    beamX = -HALF_FIELD_X+3;
-    beamY = worldModel->getUNum()-5;
+void OptimizationBehaviorWalkForward::beam( double& beamX, double& beamY, double& beamAngle ) {
+    beamX = -HALF_FIELD_X+4;
+    beamY = 1.5*worldModel->getUNum()-8;
+    target = VecPosition(0, beamY, 0);
     beamAngle = 0;
 }
 
 bool OptimizationBehaviorWalkForward::checkBeam() {
-    LOG_STR("Checking whether beam was successful");
+//    LOG_STR("Checking whether beam was successful");
     VecPosition meTruth = worldModel->getMyPositionGroundTruth();
     meTruth.setZ(0);
     double beamX, beamY, beamAngle;
@@ -293,43 +296,54 @@ bool OptimizationBehaviorWalkForward::checkBeam() {
     return true;
 }
 
-SkillType OptimizationBehaviorWalkForward::
-selectSkill() {
+SkillType OptimizationBehaviorWalkForward::selectSkill() {
     double currentTime = worldModel->getTime();
-    if (currentTime-startTime < INIT_WAIT || currentTime-startTime > INIT_WAIT + TOTAL_WALK_TIME || startTime < 0) {
+    if (currentTime-startTime < INIT_WAIT || startTime < 0) {
+//        if (currentTime-startTime > INIT_WAIT + TOTAL_WALK_TIME)
+//        cout<<worldModel->getUNum()<<" : time over, stop at "<<worldModel->getTime()<<endl;
         return SKILL_STAND;
     }
-    if (currentTime-startTime > INIT_WAIT + TOTAL_WALK_TIME)
-        cerr<<"walk time is over!\n";
-    static double y_offset = me.getY();
-    return goToTarget(VecPosition(HALF_FIELD_X, y_offset, 0));
+//    if (currentTime-startTime > INIT_WAIT + TOTAL_WALK_TIME)
+//        cerr<<"walk time is over!\n";
+    return goToTarget(target);
 }
 
 void OptimizationBehaviorWalkForward::
 updateFitness() {
     static bool written = false;
-
+    const int PLAY_MODE = worldModel->getPlayMode();
     if (run == 2) {
         if (!written) {
-            double fitness = totalWalkDist/(double)run;
+            double fitness = totalWalkTime/(double)run;
             fstream file;
             file.open(outputFile.c_str(), ios::app );
             file << fitness << '\n';
             file.close();
             written = true;
+//            cout<<"No."<<worldModel->getUNum()<<" write data at "<<worldModel->getTime()<<endl;
         }
         return;
     }
 
-    if (startTime < 0) {
+    if (startTime < 0 /*|| (PLAY_MODE != PM_PLAY_ON && worldModel->getUNum() != 7*/) {
         init();
         return;
+    }
+
+//    if (worldModel->getUNum() == 7) cout<<"i am here\n";
+    static bool started = false;
+    if (!started && PLAY_MODE == PM_PLAY_ON)  //
+    {
+        startTime = worldModel->getTime();
+        started = ~started;
+//        cout <<"No."<<worldModel->getUNum()<<" started at "<<startTime<<endl;
     }
 
     double currentTime = worldModel->getTime();
     if (currentTime-startTime < INIT_WAIT) {
         return;
     }
+
 
     if (!beamChecked) {
         static bool failedLastBeamCheck = false;
@@ -339,7 +353,7 @@ updateFitness() {
                 // Probably something bad happened if we failed the beam twice in
                 // a row (perhaps the agent can't stand) so give a bad score and
                 // move on
-                totalWalkDist -= 100;
+                totalWalkTime += 100;
                 run++;
                 LOG_STR("failed to beamcheck");
             }
@@ -351,30 +365,35 @@ updateFitness() {
             // Set playmode to PlayOn to start run and move ball out of the way
 //            string msg = "(ball (pos 0 -9 0) (vel 0 0 0))";
             string msg = "(playMode PlayOn) (ball (pos 0 -9 0) (vel 0 0 0))";
-//            if (worldModel->getUNum() == 7)
+            if (worldModel->getUNum() == 7)
             setMonMessage(msg);
         }
     }
-
-    VecPosition accel = bodyModel->getAccelRates();
-    static fstream pose("pose", ios::app);
-    pose << accel.getX()<<","<<accel.getY()<<","<<accel.getZ()<<endl;
+    if (!fallen && worldModel->isFallen())
+        fallen = true;
+//    VecPosition accel = bodyModel->getAccelRates();
+//    static fstream pose("pose", ios::app);
+//    pose << accel.getX()<<","<<accel.getY()<<","<<accel.getZ()<<endl;
     double lastTime = TOTAL_WALK_TIME+INIT_WAIT;
-    lastTime += worldModel->getUNum() == 7 ? .5 : 0;
-    if (currentTime-startTime >= lastTime+1) {
-        pose << "----------------\n";
-        pose.close();
+    lastTime += (worldModel->getUNum() == 7 ? 1 : 0);
+    if (currentTime-startTime >= lastTime || me.getDistanceTo(target) < .3) {
+//        pose << "----------------\n";
+//        pose.close();
         VecPosition me = worldModel->getMyPositionGroundTruth();
         double beamX, beamY, beamAngle;
         beam(beamX, beamY, beamAngle);
         VecPosition start = VecPosition(beamX, beamY, 0);
 
-        static double walkdist;
-        VecPosition v = me-start;
-        walkdist = v.getX() - abs(v.getY());
-        cout <<"No."<<worldModel->getUNum()<< " Run " << run << " distance walked: " << walkdist << endl;
-        totalWalkDist += walkdist;
+        static double walkTime;
+        walkTime = currentTime-startTime-INIT_WAIT;
+        cout <<"No."<<worldModel->getUNum()<< " Run " << run << " time walked: " << walkTime << endl;
+        if (fallen)
+            totalWalkTime += 50;
+        else
+            totalWalkTime += walkTime;
         run++;
+        started = false;
         init();
     }
+
 }

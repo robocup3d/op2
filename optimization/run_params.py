@@ -1,49 +1,78 @@
 #!/usr/bin/env python
 #coding=utf-8
 import os
+import json
 
 
 ROBOT_TYPE = 2
 
 
 def writeToFile(paramList, filePath):
-    file = open(filePath, 'r+')
-    paramLines = file.readlines()
-    file.close()
-    paramNames = [i.split('\t')[0] for i in paramLines]
+    with open(filePath, 'r+') as file:
+        paramLines = file.readlines()
+        paramNames = [i.split('\t')[0] for i in paramLines]
 
-    newLines = []
-    for i, e in enumerate(paramNames):
-        newLines.append(e + '\t' + str(paramList[i]) + '\n')
+    newLines = [
+        e + '\t' + str(paramList[i]) + '\n' 
+        for i, e in enumerate(paramNames)
+    ]
+    with open(filePath, 'w+') as file:
+        file.writelines(newLines)
 
-    file = open(filePath, 'w+')
-    file.writelines(newLines)
-    file.close()
 
 
 def run(paramList, roboType, absPath):
-    writeToFile(paramList, '../paramfiles/optimizing.txt')
+    writeToFile(paramList, absPath)
     command = './sample_start-optimization.sh {0} {1} walkout'.format(ROBOT_TYPE, absPath)
     os.system(command)
+    with open('walkout') as file:
+        line = file.readlines()[-2]
+        try:
+            distances = [float(_) for _ in line.strip('\n').split(' ')]
+            return sum(distances)
+        except ValueError:
+            return 10000;
 
-    file = open('walkout')
-    lines = file.readlines()
-    file.close()
-    distances = lines[-7:]
-    
-    return sum([float(_[:-1]) for _ in distances])/len(distances)
 
-
-def readParams(fn='../paramfiles/optimizing.txt'):
+def readParams(fn='../paramfiles/original.txt'):
     with open(fn) as f:
         lines = f.readlines()
         params = [float(_) for _ in [i[:-1].split('\t')[-1] for i in lines]]
-    return params
+        params_name = [i[:-1].split('\t')[0] for i in lines]
+    return params, params_name
 
 
+def dump2json(fn, params, param_names, score):
+    try:
+        with open(fn, 'a+') as f:
+            record = json.load(f)
+            record['record'].append(
+                {
+                    'parameters': params,
+                    'walk distance': score
+                }
+            )
+        with open(fn, 'w') as f:
+            json.dump(record, f, indent=4, separators=(',', ': '))
+    except FileNotFoundError:
+        record = {
+          'robot type': ROBOT_TYPE,
+          "param_names": param_names,
+          "record": [
+            {
+            'parameters': params,
+            'walk distance': score
+            }
+          ]
+        }
+        with open(fn, 'w') as f:
+            json.dump(record, f, indent=4, separators=(',', ': '))
+      
+        
+        
 def main():
-    paramList = readParams()
-    print(paramList)
+    paramList, params_name = readParams()
+    #print(paramList)
     absPath = os.path.abspath('..')+'/paramfiles/optimizing.txt'
     #writeToFile(paramList, absPath)
     rst = run(paramList, ROBOT_TYPE, absPath)

@@ -127,7 +127,7 @@ NaoBehavior::~NaoBehavior() {
 }
 
 string NaoBehavior::Init() {
-    cout << "Loading rsg: " << "(scene " << rsg << ")" << endl;
+//    cout << "Loading rsg: " << "(scene " << rsg << ")" << endl;
     return "(scene " + rsg + ")";
 }
 

@@ -46,7 +46,7 @@ extern "C" void handler(int sig)
 
 void PrintGreeting()
 {
-    cout << "UT Austin Villa 3D Simulation Team Base Code\n";
+    cout << "HFUT 3D Simulation Team Walk Optimization Base Code\n";
 
 }
 
@@ -138,7 +138,7 @@ string rsg("rsg/agent/nao/nao.rsg");
 void ReadOptions(int argc, char* argv[])
 {
 
-    teamName = "UTAustinVilla_Base";
+    teamName = "HFUT_WALK_OPTIME";
     uNum = 0; // Value of 0 means choose next available number
 
     for( int i = 0; i < argc; i++)
@@ -494,7 +494,7 @@ void Run()
         behavior = new GazeboBehavior(teamName, uNum, namedParams, rsg);
     }
     else if (agentType == "fixedKickAgent") {
-        cerr << "creating OptimizationBehaviorFixedKick" << endl;
+//        cerr << "creating OptimizationBehaviorFixedKick" << endl;
         behavior = new OptimizationBehaviorFixedKick(  teamName,
                 uNum,
                 namedParams,
