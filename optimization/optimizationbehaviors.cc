@@ -263,6 +263,7 @@ void OptimizationBehaviorWalkForward::init() {
             {5,-5},{8,-4},{10,0},{8,4},{5,5},
             {2,4},{0,0},{-2,-4},{-5,-5},{-8,-4},{-10,0}
     };
+    target_num = 0;
     startTime = worldModel->getTime();
     initialized = false;
     initBeamed = false;
@@ -318,6 +319,7 @@ SkillType OptimizationBehaviorWalkForward::selectSkill() {
     if (me.getDistanceTo(target) < .5)
     {
         goals.pop_back();
+        target_num++;
         // GET REWARD
         totalWalkTime -= 5;
     }
@@ -401,21 +403,30 @@ updateFitness() {
 
         return;
     }
+    static int fallen_count;
     if(!fallen && worldModel->isFallen())
     {
+        double time_cost = 1000*(++fallen_count)-(10+me.getX())*90;
+        if (fallen)
+        {
+            cout <<"\t>>>  No."<<worldModel->getUNum()<< " Fallen, " << run << " time cost "<<time_cost << endl;
+            run++;
+            started = false;
+            init();
+            return;
+        }
         fallen = true;
-        double time_cost = 1000-(10+me.getX())*90;
-        cout <<"\t>>>  No."<<worldModel->getUNum()<< " Fallen, " << run << " time cost: "<<time_cost << endl;
+
+        cout <<"\t>>>  No."<<worldModel->getUNum()<< " Fallen, " << run << " time cost add "<<time_cost << endl;
         totalWalkTime += time_cost;
-        run++;
-        started = false;
-        init();
         return;
     }
+    else
+        fallen = false;
 
     VecPosition me = worldModel->getMyPositionGroundTruth();
     double distance = me.getDistanceTo(target);
-    cout<<"\rdistance to target is "<<distance;
+    cout<<"\rdistance to target "<<target_num<< " is "<<distance;
     if (currentTime-startTime >= MAX_WAIT+INIT_WAIT || goals.empty()) {
 
         static double walkTime;

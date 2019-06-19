@@ -33,7 +33,7 @@ def eva(ind):
     # dump2json(PARAMS_RECORD_FILE_NAME, paramList, params_name, time_cost)
     print('walk time cost: ', time_cost)
     cursor.execute(
-        "insert into walk_straight values (" +
+        "insert into walk8 values (" +
         str(paramList)[1:-1] + ',' +
         str(time_cost) + ")"
     )
