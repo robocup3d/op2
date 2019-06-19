@@ -13,18 +13,8 @@ db = pymysql.connect('192.168.1.163', user='root', password='robocup3d', db='opt
 cursor = db.cursor()
 
 WALK_RESULT_FILE_NAME = 'walkout'
-PARAMS_RECORD_FILE_NAME = 'params-record.json'
 PARAMS_RECORD_FILE = 'walk-record.txt'
 std_list, params_names = read_params()
-if PARAMS_RECORD_FILE_NAME in listdir('.'):
-    record = json.load(open(PARAMS_RECORD_FILE_NAME, 'r'))
-    print('load pickle object from ', PARAMS_RECORD_FILE_NAME)
-else:
-    record = {
-        'robot type': ROBOT_TYPE,
-        "param_names": params_names,
-        "record": []
-    }
 
 
 def eva(ind):
@@ -55,7 +45,6 @@ def eva(ind):
 def store_data():
     # print('receive terminated signal, exit...')
     pickle.dump(es, open(pkl, 'wb'))
-    json.dump(record, open(PARAMS_RECORD_FILE_NAME, 'w'), indent=4, separators=(',', ': '))
     print('data has been dumped into ', pkl)
 
 
