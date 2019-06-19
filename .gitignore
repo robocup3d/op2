@@ -7,5 +7,7 @@ Makefile
 agentspark
 libs/*.so*
 cmake-build-debug
-
+*.skl
+*.txt
 .idea
+walkout
