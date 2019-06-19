@@ -56,7 +56,7 @@ if __name__ == '__main__':
         print('load pickle object from ', pkl)
         sleep(3)
     else:
-        es = cma.CMAEvolutionStrategy(len(std_list) * [1.0], 0.05,
+        es = cma.CMAEvolutionStrategy(len(std_list) * [1.0], 0.1,
                                       {'maxiter': 300, 'popsize': 100, 'bounds': [0.5, 1.5]})
 
     atexit.register(store_data)

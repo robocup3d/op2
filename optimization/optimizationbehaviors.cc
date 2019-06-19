@@ -283,7 +283,7 @@ void OptimizationBehaviorWalkForward::init() {
 void OptimizationBehaviorWalkForward::beam( double& beamX, double& beamY, double& beamAngle ) {
     beamX = -HALF_FIELD_X+5;
     beamY = 0;
-    target = VecPosition(0, beamY, 0);
+//    target = VecPosition(0, beamY, 0);
     beamAngle = 0;
 }
 
@@ -322,6 +322,15 @@ SkillType OptimizationBehaviorWalkForward::selectSkill() {
         target_num++;
         // GET REWARD
         totalWalkTime -= 5;
+//        if (goals.empty())
+//        {
+//            run++;
+//            double walkTime;
+//            walkTime = currentTime-startTime+INIT_WAIT;
+//            cout <<"\t>>>  No."<<worldModel->getUNum()<< " Run " << run << " time cost: " << walkTime << endl;
+//            totalWalkTime += walkTime;
+//            init();
+//        }
     }
     if (!goals.empty())
         target = goals.back();
@@ -332,6 +341,21 @@ void OptimizationBehaviorWalkForward::
 updateFitness() {
     static bool written = false;
     const int PLAY_MODE = worldModel->getPlayMode();
+    static bool started = false;
+    if (me.getDistanceTo(target) < .5)
+    {
+        if (goals.empty())
+        {
+            run++;
+            double walkTime;
+            walkTime = worldModel->getTime()-startTime+INIT_WAIT;
+            cout <<"\t>>>  No."<<worldModel->getUNum()<< " Run " << run << " time cost: " << walkTime << endl;
+            totalWalkTime += walkTime;
+            init();
+            started = false;
+        }
+    }
+
     if (run == 5) {
         if (!written) {
             double fitness = totalWalkTime/run;
@@ -355,13 +379,11 @@ updateFitness() {
         return;
     }
 
-//    if (worldModel->getUNum() == 7) cout<<"i am here\n";
-    static bool started = false;
+
     if (!started && PLAY_MODE == PM_PLAY_ON)  //
     {
         startTime = worldModel->getTime();
         started = ~started;
-//        cout <<"No."<<worldModel->getUNum()<<" started at "<<startTime<<endl;
     }
 
     double currentTime = worldModel->getTime();
@@ -388,7 +410,6 @@ updateFitness() {
         } else {
             failedLastBeamCheck = false;
             // Set playmode to PlayOn to start run and move ball out of the way
-//            string msg = "(ball (pos 0 -9 0) (vel 0 0 0))";
             string msg = "(playMode PlayOn) (ball (pos 0 -9 0) (vel 0 0 0))";
             setMonMessage(msg);
         }
@@ -400,14 +421,13 @@ updateFitness() {
         totalWalkTime += 1000;
         started = false;
         init();
-
         return;
     }
     static int fallen_count;
     if(!fallen && worldModel->isFallen())
     {
         double time_cost = 1000*(++fallen_count)-(10+me.getX())*90;
-        if (fallen)
+        if (fallen || fallen_count > 0)
         {
             cout <<"\t>>>  No."<<worldModel->getUNum()<< " Fallen, " << run << " time cost "<<time_cost << endl;
             run++;
