@@ -10,3 +10,4 @@ cmake-build-debug
 *.skl
 *.txt
 optimization/walkout
+optimization/*.txt
