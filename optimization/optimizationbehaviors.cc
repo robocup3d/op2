@@ -246,7 +246,7 @@ OptimizationBehaviorWalkForward( const std::string teamName,
                    rsg_ ),
     outputFile( outputFile_ ),
 //    TOTAL_WALK_TIME(20.),
-    MAX_WAIT(100)
+    MAX_WAIT(120)
     {
     INIT_WAIT = 3;
     run = 0;
@@ -316,7 +316,11 @@ SkillType OptimizationBehaviorWalkForward::selectSkill() {
 //    if (currentTime-startTime > INIT_WAIT + TOTAL_WALK_TIME)
 //        cerr<<"walk time is over!\n";
     if (me.getDistanceTo(target) < .5)
+    {
         goals.pop_back();
+        // GET REWARD
+        totalWalkTime -= 5;
+    }
     if (!goals.empty())
         target = goals.back();
     return goToTarget(target);
