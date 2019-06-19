@@ -2,7 +2,6 @@
 #define _OPTIMIZATION_BEHAVIORS_H
 
 #include "../behaviors/naobehavior.h"
-//#include "mysql/mysql.h"
 
 bool isBallMoving(const WorldModel *worldModel);
 
