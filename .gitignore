@@ -9,5 +9,4 @@ libs/*.so*
 cmake-build-debug
 *.skl
 *.txt
-.idea
-walkout
+optimization/walkout
