@@ -400,8 +400,9 @@ updateFitness() {
     if(!fallen && worldModel->isFallen())
     {
         fallen = true;
-        cout <<"\t>>>  No."<<worldModel->getUNum()<< " Fallen, " << run << " time cost: 1000" << endl;
-        totalWalkTime += 1000-(10+me.getX())*90;
+        double time_cost = 1000-(10+me.getX())*90;
+        cout <<"\t>>>  No."<<worldModel->getUNum()<< " Fallen, " << run << " time cost: "<<time_cost << endl;
+        totalWalkTime += time_cost;
         run++;
         started = false;
         init();
