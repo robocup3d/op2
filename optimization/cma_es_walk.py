@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 import cma
 import atexit
 from time import sleep
@@ -15,7 +15,7 @@ cursor = db.cursor()
 WALK_RESULT_FILE_NAME = 'walkout'
 PARAMS_RECORD_FILE_NAME = 'params-record.json'
 PARAMS_RECORD_FILE = 'walk-record.txt'
-std_list, params_names = readParams()
+std_list, params_names = read_params()
 if PARAMS_RECORD_FILE_NAME in listdir('.'):
     record = json.load(open(PARAMS_RECORD_FILE_NAME, 'r'))
     print('load pickle object from ', PARAMS_RECORD_FILE_NAME)
