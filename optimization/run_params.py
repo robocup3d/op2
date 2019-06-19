@@ -36,6 +36,11 @@ def run(param_list, robot_type, abs_path='../paramfiles/optimizing.txt'):
 def read_params(fn='../paramfiles/original.txt'):
     with open(fn) as f:
         lines = f.readlines()
+        lines = [
+            _ for
+            _ in lines
+            if _[0] not in '#/'
+        ]
         params = [float(_) for _ in [i[:-1].split('\t')[-1] for i in lines]]
         params_name = [i[:-1].split('\t')[0] for i in lines]
     return params, params_name
