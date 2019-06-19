@@ -30,7 +30,7 @@ else:
 def eva(ind):
     # global record
     paramList = [e * ind[i] for i, e in enumerate(std_list)]
-    time_cost = run(paramList, ROBOT_TYPE, '../paramfiles/optimizing.txt')
+    time_cost = run(paramList, ROBOT_TYPE)
     # record['record'].append(
     #     {
     #         'parameters': paramList,
