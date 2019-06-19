@@ -43,7 +43,7 @@ class OptimizationBehaviorWalkForward : public NaoBehavior {
     double totalWalkTime;
     bool fallen;
     VecPosition target;
-
+    vector<VecPosition> goals;
     void init();
     bool checkBeam();
 //    MYSQL mysql;

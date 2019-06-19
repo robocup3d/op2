@@ -254,35 +254,26 @@ OptimizationBehaviorWalkForward( const std::string teamName,
     worldModel->setUNum(uNum);
     // Use ground truth localization for behavior
     worldModel->setUseGroundTruthDataForLocalization(true);
-//    mysql_init(&mysql);
-//    mysql_options(&mysql,MYSQL_SET_CHARSET_NAME,"gb2312");
-//    if (!mysql_real_connect(
-//            &mysql,
-//            "192.168.1.163",
-//            "root","robocup3d",
-//            "optimization",
-//            3306,
-//            NULL,
-//            0))
-//    {
-//        cout<<"Connected to SQL server !\n";
-//    }
-//    else
-//    {
-//        cerr<<"Failed to connect to SQL server!\n";
-//        exit(1);
-//    }
     init();
 }
 
 void OptimizationBehaviorWalkForward::init() {
+    static int _goals[17][2] = {
+            {-8,4},{-5,-5},{-2,4},{0,0},{2,-4},
+            {5,-5},{8,-4},{10,0},{8,4},{5,5},
+            {2,4},{0,0},{-2,-4},{-5,-5},{-8,-4},{-10,0}
+    };
     startTime = worldModel->getTime();
     initialized = false;
     initBeamed = false;
     beamChecked = false;
     fallen = false;
     string msg = "(playMode BeforeKickOff)";
-
+    goals.clear();
+    for (int i=16;i>=0;i--)
+    {
+        goals.push_back(VecPosition(_goals[i][0],_goals[i][1],0));
+    }
 //    cout<<"No."<<worldModel->getUNum() <<" : wait time "<<INIT_WAIT<<endl;
 //    if (worldModel->getUNum() == 7)
     setMonMessage(msg);
@@ -324,6 +315,10 @@ SkillType OptimizationBehaviorWalkForward::selectSkill() {
     }
 //    if (currentTime-startTime > INIT_WAIT + TOTAL_WALK_TIME)
 //        cerr<<"walk time is over!\n";
+    if (me.getDistanceTo(target) < .5)
+        goals.pop_back();
+    if (!goals.empty())
+        target = goals.back();
     return goToTarget(target);
 }
 
@@ -413,21 +408,10 @@ updateFitness() {
         return;
     }
 
-//    VecPosition accel = bodyModel->getAccelRates();
-//    static fstream pose("pose", ios::app);
-//    pose << accel.getX()<<","<<accel.getY()<<","<<accel.getZ()<<endl;
-//    double lastTime = TOTAL_WALK_TIME+INIT_WAIT;
-//    lastTime += (worldModel->getUNum() == 7 ? 1 : 0);
     VecPosition me = worldModel->getMyPositionGroundTruth();
     double distance = me.getDistanceTo(target);
     cout<<"\rdistance to target is "<<distance;
-    if (currentTime-startTime >= MAX_WAIT+INIT_WAIT || distance < 1) {
-//        pose << "----------------\n";
-//        pose.close();
-
-//        double beamX, beamY, beamAngle;
-//        beam(beamX, beamY, beamAngle);
-//        VecPosition start = VecPosition(beamX, beamY, 0);
+    if (currentTime-startTime >= MAX_WAIT+INIT_WAIT || goals.empty()) {
 
         static double walkTime;
         walkTime = currentTime-startTime+INIT_WAIT;
