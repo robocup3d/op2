@@ -259,7 +259,7 @@ OptimizationBehaviorWalkForward( const std::string teamName,
 
 void OptimizationBehaviorWalkForward::init() {
     static int _goals[17][2] = {
-            {-8,4},{-5,-5},{-2,4},{0,0},{2,-4},
+            {-8,4},{-5,5},{-2,4},{0,0},{2,-4},
             {5,-5},{8,-4},{10,0},{8,4},{5,5},
             {2,4},{0,0},{-2,-4},{-5,-5},{-8,-4},{-10,0}
     };
