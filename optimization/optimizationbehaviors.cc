@@ -269,6 +269,7 @@ void OptimizationBehaviorWalkForward::init() {
     initBeamed = false;
     beamChecked = false;
     fallen = false;
+    fallen_count = 0;
     string msg = "(playMode BeforeKickOff)";
     goals.clear();
     for (int i=16;i>=0;i--)
@@ -309,7 +310,7 @@ bool OptimizationBehaviorWalkForward::checkBeam() {
 
 SkillType OptimizationBehaviorWalkForward::selectSkill() {
     double currentTime = worldModel->getTime();
-    if (currentTime-startTime < INIT_WAIT || startTime < 0) {
+    if (currentTime-startTime < INIT_WAIT || startTime < 0 || goals.empty()) {
 //        if (currentTime-startTime > INIT_WAIT + TOTAL_WALK_TIME)
 //        cout<<worldModel->getUNum()<<" : time over, stop at "<<worldModel->getTime()<<endl;
         return SKILL_STAND;
@@ -400,7 +401,7 @@ updateFitness() {
                 // Probably something bad happened if we failed the beam twice in
                 // a row (perhaps the agent can't stand) so give a bad score and
                 // move on
-                totalWalkTime += 100;
+                totalWalkTime += 1000;
                 run++;
                 LOG_STR("failed to beamcheck");
             }
@@ -423,7 +424,7 @@ updateFitness() {
         init();
         return;
     }
-    static int fallen_count;
+//    static int fallen_count;
     if(!fallen && worldModel->isFallen())
     {
         double time_cost = 1000*(++fallen_count)-(10+me.getX())*90;
@@ -453,7 +454,7 @@ updateFitness() {
         walkTime = currentTime-startTime+INIT_WAIT;
         cout <<"\t>>>  No."<<worldModel->getUNum()<< " Run " << run << " time cost: " << walkTime << endl;
         if (fallen)
-            totalWalkTime += 100;
+            totalWalkTime += 1000;
         else
             totalWalkTime += walkTime;
         run++;

@@ -35,7 +35,7 @@ public:
 class OptimizationBehaviorWalkForward : public NaoBehavior {
     const string outputFile;
 
-    int run,target_num;
+    int run,target_num,fallen_count;
     double startTime, TOTAL_WALK_TIME, MAX_WAIT;
     bool beamChecked;
     double INIT_WAIT;
