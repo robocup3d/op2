@@ -255,10 +255,11 @@ OptimizationBehaviorWalkForward( const std::string teamName,
     // Use ground truth localization for behavior
     worldModel->setUseGroundTruthDataForLocalization(true);
     init();
+    target = goals.back();
 }
 
 void OptimizationBehaviorWalkForward::init() {
-    static int _goals[17][2] = {
+    static int _goals[16][2] = {
             {-8,4},{-5,5},{-2,4},{0,0},{2,-4},
             {5,-5},{8,-4},{10,0},{8,4},{5,5},
             {2,4},{0,0},{-2,-4},{-5,-5},{-8,-4},{-10,0}
@@ -272,7 +273,7 @@ void OptimizationBehaviorWalkForward::init() {
     fallen_count = 0;
     string msg = "(playMode BeforeKickOff)";
     goals.clear();
-    for (int i=16;i>=0;i--)
+    for (int i=15;i>=0;i--)
     {
         goals.push_back(VecPosition(_goals[i][0],_goals[i][1],0));
     }
@@ -284,7 +285,6 @@ void OptimizationBehaviorWalkForward::init() {
 void OptimizationBehaviorWalkForward::beam( double& beamX, double& beamY, double& beamAngle ) {
     beamX = -HALF_FIELD_X+5;
     beamY = 0;
-//    target = VecPosition(0, beamY, 0);
     beamAngle = 0;
 }
 
@@ -302,6 +302,7 @@ bool OptimizationBehaviorWalkForward::checkBeam() {
         LOG_STR("Problem with the beam!");
         LOG(distance);
         LOG(meTruth);
+
         return false;
     }
     beamChecked = true;
@@ -319,22 +320,26 @@ SkillType OptimizationBehaviorWalkForward::selectSkill() {
 //        cerr<<"walk time is over!\n";
     if (me.getDistanceTo(target) < .5)
     {
-        goals.pop_back();
-        target_num++;
+        if (!goals.empty())
+        {
+            goals.pop_back();
+            target_num++;
+            totalWalkTime -= 5;
+        }
+
         // GET REWARD
-        totalWalkTime -= 5;
-//        if (goals.empty())
-//        {
-//            run++;
-//            double walkTime;
-//            walkTime = currentTime-startTime+INIT_WAIT;
-//            cout <<"\t>>>  No."<<worldModel->getUNum()<< " Run " << run << " time cost: " << walkTime << endl;
-//            totalWalkTime += walkTime;
-//            init();
-//        }
+
+        if (goals.empty())
+        {
+            run++;
+            double walkTime;
+            walkTime = currentTime-startTime+INIT_WAIT;
+            cout <<"\t>>>  No."<<worldModel->getUNum()<< " Run " << run << " time cost: " << walkTime << endl;
+            totalWalkTime += walkTime;
+            init();
+        }
     }
-    if (!goals.empty())
-        target = goals.back();
+    target = goals.back();
     return goToTarget(target);
 }
 
@@ -343,19 +348,26 @@ updateFitness() {
     static bool written = false;
     const int PLAY_MODE = worldModel->getPlayMode();
     static bool started = false;
-    if (me.getDistanceTo(target) < .5)
-    {
-        if (goals.empty())
-        {
-            run++;
-            double walkTime;
-            walkTime = worldModel->getTime()-startTime+INIT_WAIT;
-            cout <<"\t>>>  No."<<worldModel->getUNum()<< " Run " << run << " time cost: " << walkTime << endl;
-            totalWalkTime += walkTime;
-            init();
-            started = false;
-        }
-    }
+//    if (me.getDistanceTo(target) < .5)
+//    {
+//        if (!goals.empty())
+//            goals.pop_back();
+//        if (goals.empty())
+//        {
+//            run++;
+//            double walkTime;
+//            walkTime = worldModel->getTime()-startTime+INIT_WAIT;
+//            cout <<"\t>>>  No."<<worldModel->getUNum()<< " Run " << run << " time cost: " << walkTime << endl;
+//            totalWalkTime += walkTime;
+//            init();
+//            started = false;
+//        } else{
+//            target = goals.back();
+//            target_num++;
+//            // GET REWARD
+//            totalWalkTime -= 5;
+//        }
+//    }
 
     if (run == 5) {
         if (!written) {
@@ -373,8 +385,8 @@ updateFitness() {
         return;
     }
 
-//    worldModel->getRVSender()->drawText("display test",300,300,RVSender::RED);
-//    worldModel->getRVSender()->drawAgentText("display test",2,SIDE_LEFT,RVSender::RED);
+//    worldModel->getRVSender()->drawText("display test",0,0,RVSender::RED);
+    worldModel->getRVSender()->drawAgentText("display test",2,SIDE_LEFT,RVSender::RED);
     if (startTime < 0 /*|| (PLAY_MODE != PM_PLAY_ON && worldModel->getUNum() != 7*/) {
         init();
         return;

@@ -72,7 +72,8 @@ def dump2json(fn, params, param_names, score):
 def main():
     param_list, params_name = read_params()
     # print(paramList)
-    abs_path = os.path.abspath('..') + '/paramfiles/original.txt'
+    # abs_path = os.path.abspath('..') + '/paramfiles/original.txt'
+    abs_path = os.path.abspath('..') + '/paramfiles/optimizing.txt'
     # write2file(paramList, absPath)
     rst = run(param_list, ROBOT_TYPE, abs_path)
     # PLUS 85 DUE TO REWARD, HERE RECOVER TO ORIGINAL TIME

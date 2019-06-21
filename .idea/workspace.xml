@@ -14,7 +14,7 @@
     <list default="true" id="e9e63a31-5ff0-4d7e-aca2-799ff9c040a8" name="Default Changelist" comment="format">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/optimization/optimizationbehaviors.cc" beforeDir="false" afterPath="$PROJECT_DIR$/optimization/optimizationbehaviors.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/optimization/optimizationbehaviors.h" beforeDir="false" afterPath="$PROJECT_DIR$/optimization/optimizationbehaviors.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/optimization/run_params.py" beforeDir="false" afterPath="$PROJECT_DIR$/optimization/run_params.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/optimization/sample_start-optimization.sh" beforeDir="false" afterPath="$PROJECT_DIR$/optimization/sample_start-optimization.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/optimization/walk-record.txt" beforeDir="false" afterPath="$PROJECT_DIR$/optimization/walk-record.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/paramfiles/optimizing.txt" beforeDir="false" afterPath="$PROJECT_DIR$/paramfiles/optimizing.txt" afterDir="false" />
@@ -33,11 +33,11 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/optimization/optimizationbehaviors.cc">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="201">
-              <caret line="347" column="26" selection-start-line="347" selection-start-column="26" selection-end-line="347" selection-end-column="26" />
+            <state relative-caret-position="321">
+              <caret line="275" column="17" selection-start-line="275" selection-start-column="17" selection-end-line="275" selection-end-column="17" />
               <folding>
                 <element signature="e#0#34#0" expanded="true" />
               </folding>
@@ -45,11 +45,31 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/main.cc">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-360">
+              <folding>
+                <element signature="e#0#18#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/headers/headers.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="130">
+              <caret line="302" column="24" selection-start-line="302" selection-start-column="24" selection-end-line="302" selection-end-column="24" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/optimization/sample_start-optimization.sh">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="280">
-              <caret line="53" column="300" selection-start-line="53" selection-start-column="300" selection-end-line="53" selection-end-column="300" />
+            <state relative-caret-position="293">
+              <caret line="53" column="306" selection-start-line="53" selection-start-column="306" selection-end-line="53" selection-end-column="306" />
             </state>
           </provider>
         </entry>
@@ -57,7 +77,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/optimization/cma_es_walk.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="385">
+            <state relative-caret-position="384">
               <caret line="49" selection-start-line="49" selection-end-line="49" />
             </state>
           </provider>
@@ -66,8 +86,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/optimization/run_params.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1440">
-              <caret line="73" column="22" selection-start-line="73" selection-start-column="22" selection-end-line="73" selection-end-column="22" />
+            <state relative-caret-position="284">
+              <caret line="24" column="36" selection-start-line="24" selection-start-column="36" selection-end-line="24" selection-end-column="36" />
             </state>
           </provider>
         </entry>
@@ -93,7 +113,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/optimization/optimizationbehaviors.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="163">
+            <state relative-caret-position="680">
               <caret line="34" column="45" selection-start-line="34" selection-start-column="45" selection-end-line="34" selection-end-column="45" />
             </state>
           </provider>
@@ -108,7 +128,17 @@
       </list>
     </option>
   </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>RVSe</find>
+    </findStrings>
+  </component>
   <component name="Git.Settings">
+    <option name="PREVIOUS_COMMIT_AUTHORS">
+      <list>
+        <option value="Wistral &lt;whistral@gmail.com&gt;" />
+      </list>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="IdeDocumentHistory">
@@ -116,13 +146,13 @@
       <list>
         <option value="$PROJECT_DIR$/optimization/cma_es_kick.py" />
         <option value="$PROJECT_DIR$/paramfiles/original.txt" />
-        <option value="$PROJECT_DIR$/optimization/run_params.py" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/optimization/best_params_run.py" />
         <option value="$PROJECT_DIR$/optimization/cma_es_walk.py" />
         <option value="$PROJECT_DIR$/optimization/optimizationbehaviors.h" />
-        <option value="$PROJECT_DIR$/optimization/optimizationbehaviors.cc" />
+        <option value="$PROJECT_DIR$/optimization/run_params.py" />
         <option value="$PROJECT_DIR$/optimization/sample_start-optimization.sh" />
+        <option value="$PROJECT_DIR$/optimization/optimizationbehaviors.cc" />
       </list>
     </option>
   </component>
@@ -141,7 +171,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -154,15 +183,11 @@
               <item name="optimization" type="462c0819:PsiDirectoryNode" />
               <item name="optimization" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="UTAustinVillaBase" type="b2602c69:ProjectViewProjectNode" />
-              <item name="optimization" type="462c0819:PsiDirectoryNode" />
-              <item name="paramfiles" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -204,7 +229,8 @@
       <workItem from="1560947849554" duration="1886000" />
       <workItem from="1560949793412" duration="3496000" />
       <workItem from="1560955851179" duration="3336000" />
-      <workItem from="1561004698284" duration="715000" />
+      <workItem from="1561004698284" duration="2677000" />
+      <workItem from="1561086323509" duration="2459000" />
     </task>
     <task id="LOCAL-00001" summary="add &quot;8&quot; circle">
       <created>1560948987619</created>
@@ -304,17 +330,24 @@
       <option name="project" value="LOCAL" />
       <updated>1560958928002</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="improve eva">
+      <created>1561005501510</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1561005501510</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="9433000" />
+    <option name="totallyTimeSpent" value="13854000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="8" y="31" width="1375" height="845" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.26808834" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.27418128" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -325,7 +358,7 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Database Changes" order="7" />
-      <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.49886277" visible="true" weight="0.3069307" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="8" sideWeight="0.49886277" visible="true" weight="0.30551627" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5011372" side_tool="true" weight="0.32132965" />
       <window_info anchor="bottom" id="Version Control" order="10" />
       <window_info anchor="bottom" id="CMake" order="11" weight="0.32971507" />
@@ -339,6 +372,7 @@
     <option name="version" value="1" />
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
     <MESSAGE value="add &quot;8&quot; circle" />
     <MESSAGE value="fix display fitness in fallen condition" />
@@ -352,23 +386,10 @@
     <MESSAGE value="expand time limit and update eva" />
     <MESSAGE value="update ignore" />
     <MESSAGE value="improve eva and stride" />
-    <option name="LAST_COMMIT_MESSAGE" value="improve eva and stride" />
+    <MESSAGE value="improve eva" />
+    <option name="LAST_COMMIT_MESSAGE" value="improve eva" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/optimization/run_params.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1440">
-          <caret line="73" column="22" selection-start-line="73" selection-start-column="22" selection-end-line="73" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/paramfiles/original.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="27" selection-start-line="27" selection-end-line="27" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/optimization/best_params_run.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
@@ -385,32 +406,67 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/optimization/optimizationbehaviors.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="163">
+        <state relative-caret-position="680">
           <caret line="34" column="45" selection-start-line="34" selection-start-column="45" selection-end-line="34" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/paramfiles/defaultParams_t2.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-720" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/paramfiles/original.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="540">
+          <caret line="27" selection-start-line="27" selection-end-line="27" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/optimization/cma_es_walk.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="385">
+        <state relative-caret-position="384">
           <caret line="49" selection-start-line="49" selection-end-line="49" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/optimization/optimizationbehaviors.cc">
+    <entry file="file://$PROJECT_DIR$/optimization/run_params.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="201">
-          <caret line="347" column="26" selection-start-line="347" selection-start-column="26" selection-end-line="347" selection-end-column="26" />
+        <state relative-caret-position="284">
+          <caret line="24" column="36" selection-start-line="24" selection-start-column="36" selection-end-line="24" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/headers/headers.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="130">
+          <caret line="302" column="24" selection-start-line="302" selection-start-column="24" selection-end-line="302" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.cc">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-360">
           <folding>
-            <element signature="e#0#34#0" expanded="true" />
+            <element signature="e#0#18#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/optimization/sample_start-optimization.sh">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="280">
-          <caret line="53" column="300" selection-start-line="53" selection-start-column="300" selection-end-line="53" selection-end-column="300" />
+        <state relative-caret-position="293">
+          <caret line="53" column="306" selection-start-line="53" selection-start-column="306" selection-end-line="53" selection-end-column="306" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/optimization/optimizationbehaviors.cc">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="321">
+          <caret line="275" column="17" selection-start-line="275" selection-start-column="17" selection-end-line="275" selection-end-column="17" />
+          <folding>
+            <element signature="e#0#34#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
