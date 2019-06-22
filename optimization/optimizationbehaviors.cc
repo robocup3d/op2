@@ -252,6 +252,8 @@ OptimizationBehaviorWalkForward( const std::string teamName,
     run = 0;
     totalWalkTime = 0;
     worldModel->setUNum(uNum);
+    roboviz = worldModel->getRVSender();
+    roboviz->clear();
     // Use ground truth localization for behavior
     worldModel->setUseGroundTruthDataForLocalization(true);
     init();
@@ -271,14 +273,13 @@ void OptimizationBehaviorWalkForward::init() {
     beamChecked = false;
     fallen = false;
     fallen_count = 0;
+    display_count = 0;
     string msg = "(playMode BeforeKickOff)";
     goals.clear();
     for (int i=15;i>=0;i--)
     {
         goals.push_back(VecPosition(_goals[i][0],_goals[i][1],0));
     }
-//    cout<<"No."<<worldModel->getUNum() <<" : wait time "<<INIT_WAIT<<endl;
-//    if (worldModel->getUNum() == 7)
     setMonMessage(msg);
 }
 
@@ -324,10 +325,9 @@ SkillType OptimizationBehaviorWalkForward::selectSkill() {
         {
             goals.pop_back();
             target_num++;
+            // GET REWARD
             totalWalkTime -= 5;
         }
-
-        // GET REWARD
 
         if (goals.empty())
         {
@@ -348,26 +348,7 @@ updateFitness() {
     static bool written = false;
     const int PLAY_MODE = worldModel->getPlayMode();
     static bool started = false;
-//    if (me.getDistanceTo(target) < .5)
-//    {
-//        if (!goals.empty())
-//            goals.pop_back();
-//        if (goals.empty())
-//        {
-//            run++;
-//            double walkTime;
-//            walkTime = worldModel->getTime()-startTime+INIT_WAIT;
-//            cout <<"\t>>>  No."<<worldModel->getUNum()<< " Run " << run << " time cost: " << walkTime << endl;
-//            totalWalkTime += walkTime;
-//            init();
-//            started = false;
-//        } else{
-//            target = goals.back();
-//            target_num++;
-//            // GET REWARD
-//            totalWalkTime -= 5;
-//        }
-//    }
+    double currentTime = worldModel->getTime();
 
     if (run == 5) {
         if (!written) {
@@ -386,7 +367,24 @@ updateFitness() {
     }
 
 //    worldModel->getRVSender()->drawText("display test",0,0,RVSender::RED);
-    worldModel->getRVSender()->drawAgentText("display test",2,SIDE_LEFT,RVSender::RED);
+//    roboviz->drawAgentText("display test",2,SIDE_LEFT,RVSender::RED);
+
+#define MESSAGE_PCS 4
+    static char rvMSG[MESSAGE_PCS][50];
+
+    if (display_count % 50 == 0)
+    {
+        roboviz->clearStaticDrawings();
+        roboviz->drawCircle(target.getX(),target.getY(),.5,RVSender::BLUE);
+        sprintf(rvMSG[0], "OPTIMIZATION STATUS");
+        sprintf(rvMSG[1], "Agent Type: %d", agentType);
+        sprintf(rvMSG[2], "Round: %d", run);
+        sprintf(rvMSG[3], "Real Time cost: %.2f", currentTime-startTime+INIT_WAIT);
+        for (int i=0;i<MESSAGE_PCS;i++)
+            roboviz->drawText(rvMSG[i], 0, 20-3*i);
+    }
+
+
     if (startTime < 0 /*|| (PLAY_MODE != PM_PLAY_ON && worldModel->getUNum() != 7*/) {
         init();
         return;
@@ -399,7 +397,7 @@ updateFitness() {
         started = ~started;
     }
 
-    double currentTime = worldModel->getTime();
+
     if (currentTime-startTime < INIT_WAIT) {
         return;
     }
@@ -459,6 +457,8 @@ updateFitness() {
 
     VecPosition me = worldModel->getMyPositionGroundTruth();
     double distance = me.getDistanceTo(target);
+    display_count++;
+    if (display_count % 10 == 0)
     cout<<"\rdistance to target "<<target_num<< " is "<<distance;
     if (currentTime-startTime >= MAX_WAIT+INIT_WAIT || goals.empty()) {
 

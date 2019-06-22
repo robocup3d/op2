@@ -59,7 +59,7 @@ protected:
     string rsg;
 
     std::string agentTeamName;
-    int agentUNum;
+    int agentUNum, agentType;
 
     Parser *parser;
     WorldModel *worldModel;

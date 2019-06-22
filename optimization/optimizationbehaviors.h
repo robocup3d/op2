@@ -35,7 +35,7 @@ public:
 class OptimizationBehaviorWalkForward : public NaoBehavior {
     const string outputFile;
 
-    int run,target_num,fallen_count;
+    int run,target_num,fallen_count,display_count;
     double startTime, TOTAL_WALK_TIME, MAX_WAIT;
     bool beamChecked;
     double INIT_WAIT;
@@ -45,6 +45,8 @@ class OptimizationBehaviorWalkForward : public NaoBehavior {
     vector<VecPosition> goals;
     void init();
     bool checkBeam();
+
+    RVSender* roboviz;
 //    MYSQL mysql;
 
 public:

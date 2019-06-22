@@ -23,7 +23,7 @@ extern int agentBodyType;
 NaoBehavior::
 NaoBehavior(const std::string teamName, int uNum, const map<string, string>& namedParams_, const string& rsg_) :
     namedParams( namedParams_ ),
-    rsg( rsg_ )
+    rsg( rsg_ ),agentType(agentBodyType)
 {
 
     //cout << "Constructing of Nao Behavior" << endl;
@@ -171,7 +171,7 @@ string NaoBehavior::Think(const std::string& message) {
     worldModel->getRVSender()->drawPoint(pos.getX(), pos.getY(), 10);
     worldModel->getRVSender()->drawLine(pos.getX(), pos.getY(), pos.getX()+dir.getX(), pos.getY()+dir.getY());
     */
-
+//    worldModel->getRVSender()->clearStaticDrawings();
     calculateAngles();
 
 
